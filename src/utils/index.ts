@@ -1,4 +1,4 @@
-import type { Ticket, User, LogEntry, ToastAlert } from '../types';
+import type { Ticket, User, LogEntry } from '../types';
 
 // Utility functions for BugTracker Pro
 
@@ -150,6 +150,71 @@ export const generateSampleTickets = (count: number = 50): Ticket[] => {
   return tickets;
 };
 
+export const generateDeterministicSampleTickets = (): Ticket[] => {
+  const users = generateSampleUsers();
+  
+  // Fixed base date for consistent testing
+  const baseDate = new Date('2024-01-15T10:00:00Z');
+  
+  return [
+    {
+      id: 'TICKET-0001',
+      title: 'Login page crashes on mobile Safari',
+      description: 'The login page consistently crashes when accessed through Safari on iOS devices. Users are unable to authenticate, causing significant disruption to mobile workflows.',
+      priority: 'High',
+      status: 'TODO',
+      assignee: users[0].name, // Alice Johnson
+      deadline: new Date('2024-01-25T09:00:00Z'),
+      tags: ['Critical', 'Mobile', 'Safari', 'Bug'],
+      createdAt: new Date(baseDate.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    },
+    {
+      id: 'TICKET-0002',
+      title: 'Dashboard loads slowly with large datasets',
+      description: 'Performance issues observed when loading dashboard with datasets containing more than 1000 records. Load times exceed 5 seconds consistently.',
+      priority: 'Medium',
+      status: 'WORKING',
+      assignee: users[1].name, // Bob Smith
+      deadline: new Date('2024-01-30T17:00:00Z'),
+      tags: ['Performance', 'Frontend', 'Database'],
+      createdAt: new Date(baseDate.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+    },
+    {
+      id: 'TICKET-0003',
+      title: 'Email notifications not being sent',
+      description: 'System email notifications for ticket updates and assignments are not being delivered to users. SMTP configuration appears to be correct.',
+      priority: 'High',
+      status: 'WORKING',
+      assignee: users[2].name, // Carol Williams
+      deadline: new Date('2024-01-22T12:00:00Z'),
+      tags: ['Backend', 'Integration', 'Critical'],
+      createdAt: new Date(baseDate.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+    },
+    {
+      id: 'TICKET-0004',
+      title: 'Search functionality returns incorrect results',
+      description: 'The global search feature is returning inconsistent and sometimes incorrect results. Search indexing may need to be rebuilt.',
+      priority: 'Medium',
+      status: 'TODO',
+      assignee: users[3].name, // David Brown
+      deadline: new Date('2024-02-05T14:00:00Z'),
+      tags: ['Feature Request', 'Backend', 'Search'],
+      createdAt: new Date(baseDate.getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+    },
+    {
+      id: 'TICKET-0005',
+      title: 'File upload fails for files over 10MB',
+      description: 'Large file uploads consistently fail when file size exceeds 10MB limit. Error handling needs improvement and size limits should be configurable.',
+      priority: 'Low',
+      status: 'DONE',
+      assignee: users[4].name, // Eva Martinez
+      deadline: null,
+      tags: ['Enhancement', 'Backend', 'API'],
+      createdAt: new Date(baseDate.getTime() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+    }
+  ];
+};
+
 export const generateSampleLogs = (count: number = 100): LogEntry[] => {
   const levels: Array<'info' | 'warning' | 'error'> = ['info', 'warning', 'error'];
   const sources = ['frontend', 'backend', 'database', 'auth-service', 'email-service'];
@@ -236,7 +301,7 @@ export const formatDateTime = (date: Date): string => {
 };
 
 // Local storage utilities
-export const saveToLocalStorage = (key: string, data: any): void => {
+export const saveToLocalStorage = (key: string, data: unknown): void => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
   } catch (error) {

@@ -2,8 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { AppState, AppAction } from '../types';
 import { 
-  generateSampleTickets, 
-  recreateTicketDOM,
+  generateDeterministicSampleTickets,
   advancedDevToolsDetection,
   complexTimingChallenges,
 } from '../utils';
@@ -202,7 +201,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeData = () => {
       // Generate sample data on every load
-      const sampleTickets = generateSampleTickets(3); // Start with 10 tickets
+      const sampleTickets = generateDeterministicSampleTickets(); // Start with 5 deterministic tickets
       dispatch({ type: 'SET_TICKETS', payload: sampleTickets });
     };
 
