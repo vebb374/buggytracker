@@ -60,6 +60,7 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
           style={{
             ...provided.draggableProps.style,
             opacity: getStatusOpacity(ticket.status),
+            marginBottom: '12px',
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -67,7 +68,6 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
           <Card
             size="small"
             style={{
-              marginBottom: '12px',
               border: snapshot.isDragging ? '2px solid #1890ff' : '1px solid #d9d9d9',
               borderRadius: '8px',
               boxShadow: snapshot.isDragging 
