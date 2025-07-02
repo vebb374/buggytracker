@@ -9,7 +9,6 @@ import {
   Space, 
   Typography, 
   Alert, 
-  Tag, 
   Divider, 
   Spin,
   Tooltip
@@ -17,7 +16,6 @@ import {
 import { 
   SaveOutlined, 
   LoadingOutlined,
-  ExclamationCircleOutlined,
   EyeOutlined,
   PlusOutlined
 } from '@ant-design/icons';
@@ -68,7 +66,7 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
   const [devToolsDetected, setDevToolsDetected] = useState(false);
   const [editorVersion, setEditorVersion] = useState(1);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [customTags, setCustomTags] = useState<string[]>([]);
+  const [tagOptions, setTagOptions] = useState<string[]>(PREDEFINED_TAGS);
   const [newTagInput, setNewTagInput] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const intervalRef = useRef<number | null>(null);
@@ -106,6 +104,10 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
   // Initialize form with ticket data
   useEffect(() => {
     if (isOpen && ticket) {
+      // Combine predefined tags with tags from the ticket to create a unique set of options
+      const allTags = [...new Set([...PREDEFINED_TAGS, ...ticket.tags])];
+      setTagOptions(allTags);
+
       form.setFieldsValue({
         title: ticket.title,
         description: ticket.description || '',
@@ -115,10 +117,9 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
         deadline: ticket.deadline ? dayjs(ticket.deadline) : null,
         tags: ticket.tags
       });
-      setCustomTags(ticket.tags.filter(tag => !PREDEFINED_TAGS.includes(tag)));
     } else if (isOpen && mode === 'create') {
       form.resetFields();
-      setCustomTags([]);
+      setTagOptions(PREDEFINED_TAGS);
     }
   }, [isOpen, ticket, mode, form]);
 
@@ -211,7 +212,7 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
         status: values.status || 'TODO',
         assignee: values.assignee,
         deadline: values.deadline ? values.deadline.toDate() : null,
-        tags: [...values.tags, ...customTags],
+        tags: values.tags || [],
         createdAt: ticket?.createdAt || new Date(),
         domVersion: (ticket?.domVersion || 0) + 1
       };
@@ -224,18 +225,18 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
     }
   };
 
-  const handleAddCustomTag = () => {
-    if (newTagInput.trim() && !customTags.includes(newTagInput.trim())) {
-      setCustomTags([...customTags, newTagInput.trim()]);
-      setNewTagInput('');
-      // DOM recreation after tag addition
-      setEditorVersion(prev => prev + 1);
+  const handleAddTag = () => {
+    const newTag = newTagInput.trim();
+    if (newTag && !tagOptions.includes(newTag)) {
+        setTagOptions([...tagOptions, newTag]);
     }
-  };
-
-  const handleRemoveCustomTag = (tagToRemove: string) => {
-    setCustomTags(customTags.filter(tag => tag !== tagToRemove));
-    setEditorVersion(prev => prev + 1);
+    if (newTag) {
+        const currentTags = form.getFieldValue('tags') || [];
+        if (!currentTags.includes(newTag)) {
+            form.setFieldValue('tags', [...currentTags, newTag]);
+        }
+    }
+    setNewTagInput('');
   };
 
   return (
@@ -260,23 +261,9 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
       maskClosable={!isSaving && !isValidating}
       keyboard={!isSaving && !isValidating}
       styles={{ body: { overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' } }}
-      style={{
-        border: devToolsDetected ? '2px solid #ff4d4f' : undefined
-      }}
+     
     >
       <div key={`editor-${editorVersion}`}>
-        {/* DevTools Warning */}
-        {devToolsDetected && (
-          <Alert
-            message="Development Mode Active"
-            description="Enhanced validation and security checks are enabled"
-            type="warning"
-            showIcon
-            style={{ marginBottom: '16px' }}
-            icon={<ExclamationCircleOutlined />}
-          />
-        )}
-
         {/* Validation Errors */}
         {validationErrors.length > 0 && (
           <Alert
@@ -450,46 +437,33 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
               placeholder="Select tags"
               style={{ width: '100%' }}
               disabled={isSaving || isValidating}
-            >
-              {PREDEFINED_TAGS.map(tag => (
-                <Option key={tag} value={tag}>{tag}</Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          {/* Custom Tags */}
-          <Form.Item label="Custom Tags">
-            <Space.Compact style={{ width: '100%' }}>
-              <Input
-                placeholder="Add custom tag"
-                value={newTagInput}
-                onChange={(e) => setNewTagInput(e.target.value)}
-                onPressEnter={handleAddCustomTag}
-                disabled={isSaving || isValidating}
-              />
-              <Button 
-                icon={<PlusOutlined />} 
-                onClick={handleAddCustomTag}
-                disabled={!newTagInput.trim() || isSaving || isValidating}
-              >
-                Add
-              </Button>
-            </Space.Compact>
-            
-            {customTags.length > 0 && (
-              <div style={{ marginTop: '8px' }}>
-                {customTags.map(tag => (
-                  <Tag
-                    key={tag}
-                    closable
-                    onClose={() => handleRemoveCustomTag(tag)}
-                    style={{ marginBottom: '4px' }}
-                  >
-                    {tag}
-                  </Tag>
-                ))}
-              </div>
-            )}
+              options={tagOptions.map(tag => ({
+                value: tag,
+                label: tag
+              }))}
+              onOpenChange={open => {
+                if (!open) {
+                  setNewTagInput('');
+                }
+              }}
+              dropdownRender={menu => (
+                <>
+                  {menu}
+                  <Divider style={{ margin: '8px 0' }} />
+                  <Space.Compact style={{ width: '100%', padding: '0 8px 4px' }}>
+                    <Input
+                      placeholder="Add new tag"
+                      value={newTagInput}
+                      onChange={e => setNewTagInput(e.target.value)}
+                      onPressEnter={handleAddTag}
+                    />
+                    <Button icon={<PlusOutlined />} onClick={handleAddTag}>
+                      Add
+                    </Button>
+                  </Space.Compact>
+                </>
+              )}
+            />
           </Form.Item>
         </Form>
 
