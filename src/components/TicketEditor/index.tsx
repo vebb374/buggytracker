@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Modal, 
   Form, 
@@ -10,13 +10,11 @@ import {
   Typography, 
   Alert, 
   Divider, 
-  Spin,
-  Tooltip
+  Spin
 } from 'antd';
 import { 
   SaveOutlined, 
   LoadingOutlined,
-  EyeOutlined,
   PlusOutlined
 } from '@ant-design/icons';
 import type { TicketEditorProps, Ticket } from '../../types';
@@ -25,16 +23,6 @@ import dayjs from 'dayjs';
 const { TextArea } = Input;
 const { Text } = Typography;
 const { Option } = Select;
-
-// DevTools detection utility
-const detectDevTools = (): boolean => {
-  const threshold = 160;
-  return (
-    window.outerHeight - window.innerHeight > threshold ||
-    window.outerWidth - window.innerWidth > threshold ||
-    (window as any).devtools?.open === true
-  );
-};
 
 // Variable delay for validation challenges
 const getValidationDelay = (): number => {
@@ -63,43 +51,10 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
   const [form] = Form.useForm();
   const [isSaving, setIsSaving] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
-  const [devToolsDetected, setDevToolsDetected] = useState(false);
-  const [editorVersion, setEditorVersion] = useState(1);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [tagOptions, setTagOptions] = useState<string[]>(PREDEFINED_TAGS);
   const [newTagInput, setNewTagInput] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const intervalRef = useRef<number | null>(null);
-
-  // DevTools detection with DOM manipulation challenges
-  useEffect(() => {
-    const checkDevTools = () => {
-      const detected = detectDevTools();
-      if (detected !== devToolsDetected) {
-        setDevToolsDetected(detected);
-        if (detected) {
-          // Create DOM recreation when DevTools detected
-          setEditorVersion(prev => prev + 1);
-          // Clear form data occasionally for automation challenges
-          if (Math.random() < 0.3) { // 30% chance
-            form.resetFields();
-            setValidationErrors(['DevTools detected - Form reset for security']);
-          }
-        }
-      }
-    };
-
-    if (isOpen) {
-      checkDevTools();
-      intervalRef.current = setInterval(checkDevTools, 1000) as any;
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isOpen, devToolsDetected, form]);
 
   // Initialize form with ticket data
   useEffect(() => {
@@ -157,17 +112,6 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
       fieldErrs.priority = 'Required field';
     }
 
-    // DevTools-specific validation challenges
-    if (devToolsDetected) {
-      if (Math.random() < 0.4) { // 40% chance when DevTools open
-        errors.push('Security validation failed - DevTools detected');
-      }
-      if (values.title && values.title.includes('test')) {
-        errors.push('Test data not allowed in production mode');
-        fieldErrs.title = 'Test data detected';
-      }
-    }
-
     // Network failure simulation
     if (Math.random() < 0.15) { // 15% chance
       errors.push('Network validation timeout - Please try again');
@@ -214,7 +158,6 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
         deadline: values.deadline ? values.deadline.toDate() : null,
         tags: values.tags || [],
         createdAt: ticket?.createdAt || new Date(),
-        domVersion: (ticket?.domVersion || 0) + 1
       };
 
       onSave(updatedTicket);
@@ -244,14 +187,6 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
       title={
         <Space>
           <Text strong>{mode === 'create' ? 'Create New Ticket' : 'Edit Ticket'}</Text>
-          {devToolsDetected && (
-            <Tooltip title="DevTools detected - Enhanced validation active">
-              <EyeOutlined style={{ color: '#ff4d4f' }} />
-            </Tooltip>
-          )}
-          <Text type="secondary" style={{ fontSize: '12px' }}>
-            v{editorVersion}
-          </Text>
         </Space>
       }
       open={isOpen}
@@ -263,7 +198,7 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
       styles={{ body: { overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' } }}
      
     >
-      <div key={`editor-${editorVersion}`}>
+      <div>
         {/* Validation Errors */}
         {validationErrors.length > 0 && (
           <Alert
@@ -491,20 +426,6 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
             {mode === 'create' ? 'Create Ticket' : 'Save Changes'}
           </Button>
         </div>
-
-        {/* Debug Info */}
-        <Text 
-          type="secondary" 
-          style={{ 
-            fontSize: '10px', 
-            display: 'block', 
-            marginTop: '8px',
-            textAlign: 'center',
-            opacity: 0.6
-          }}
-        >
-          Editor v{editorVersion} • Validation: {devToolsDetected ? 'Enhanced' : 'Standard'}
-        </Text>
       </div>
     </Modal>
   );

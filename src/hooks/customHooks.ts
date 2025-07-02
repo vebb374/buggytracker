@@ -28,11 +28,10 @@ export const useTickets = () => {
     }, Math.random() * 1000);
   };
 
-  const moveTicket = async (ticketId: string, newStatus: Ticket['status']) => {
-    const newDomVersion = Date.now(); // Simple version increment
+  const moveTicket = (ticketId: string, newStatus: Ticket['status']) => {
     dispatch({ 
       type: 'MOVE_TICKET', 
-      payload: { ticketId, newStatus, newDomVersion } 
+      payload: { ticketId, newStatus } 
     });
   };
 

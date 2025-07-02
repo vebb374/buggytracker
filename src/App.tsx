@@ -97,7 +97,7 @@ const useResponsive = () => {
 // Main App Component
 const AppContent: React.FC = () => {
   const { updateTicket, addTicket } = useTickets();
-  const { isMobile, isTablet, isDesktop } = useResponsive();
+  const { isMobile, isDesktop } = useResponsive();
   
   // Phase 5: Enhanced state management for responsive UI
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
@@ -352,28 +352,7 @@ const AppContent: React.FC = () => {
           />
         )}
 
-        {/* Phase 5: Performance monitoring in development */}
-        {import.meta.env.DEV && (
-          <div 
-            className="development-panel"
-            style={{
-              position: 'fixed',
-              bottom: '10px',
-              left: '10px',
-              background: 'rgba(0,0,0,0.8)',
-              color: 'white',
-              padding: '8px 12px',
-              borderRadius: '6px',
-              fontSize: '11px',
-              zIndex: 1000,
-              fontFamily: 'monospace',
-            }}
-          >
-            📱 {isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop'} | 
-            🎯 Phase 5 Enhanced | 
-            ⚡ Optimized
-          </div>
-        )}
+
       </Layout>
     </ConfigProvider>
   );

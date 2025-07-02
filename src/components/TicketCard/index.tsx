@@ -15,9 +15,8 @@ import { formatDate } from '../../utils';
 const { Text, Paragraph } = Typography;
 
 // Helper function to safely convert date string/object to Date
-const ensureDate = (date: Date | string): Date => {
-  if (date instanceof Date) return date;
-  return new Date(date);
+const ensureDate = (date: string | Date): Date => {
+  return date instanceof Date ? date : new Date(date);
 };
 
 // Extended TicketCard props to include drag index
@@ -255,7 +254,7 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
             }}>
               <ClockCircleOutlined />
               <Text style={{ fontSize: '10px', color: '#ccc' }}>
-                v{ticket.domVersion} • {ensureDate(ticket.createdAt).toLocaleDateString()}
+                {ensureDate(ticket.createdAt).toLocaleDateString()}
               </Text>
             </div>
           </Card>

@@ -10,7 +10,6 @@ export interface Ticket {
   deadline: Date | null;
   tags: string[];
   createdAt: Date;
-  domVersion: number; // For DOM recreation challenges
 }
 
 export interface Column {
@@ -70,14 +69,13 @@ export type AppAction =
   | { type: 'SET_TICKETS'; payload: Ticket[] }
   | { type: 'ADD_TICKET'; payload: Ticket }
   | { type: 'UPDATE_TICKET'; payload: { id: string; updates: Partial<Ticket> } }
-  | { type: 'MOVE_TICKET'; payload: { ticketId: string; newStatus: Ticket['status']; newDomVersion: number } }
+  | { type: 'MOVE_TICKET'; payload: { ticketId: string; newStatus: Ticket['status'] } }
   | { type: 'DELETE_TICKET'; payload: string }
   | { type: 'SET_LOADING'; payload: { key: keyof AppState['loadingStates']; value: boolean } }
   | { type: 'ADD_TOAST'; payload: ToastAlert }
   | { type: 'REMOVE_TOAST'; payload: string }
   | { type: 'TOGGLE_SIDEBAR' }
   | { type: 'LOAD_MORE_TICKETS'; payload: Ticket[] }
-  | { type: 'RECREATE_DOM'; payload: { ticketId: string } }
   | { type: 'DETECT_DEVTOOLS'; payload: boolean };
 
 // Drag and drop types

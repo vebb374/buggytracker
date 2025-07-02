@@ -144,7 +144,6 @@ export const generateSampleTickets = (count: number = 50): Ticket[] => {
       deadline,
       tags: selectedTags,
       createdAt,
-      domVersion: 1 // Start with version 1, will increment with DOM recreation
     });
   }
 

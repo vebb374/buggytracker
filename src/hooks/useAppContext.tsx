@@ -92,11 +92,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
     case 'MOVE_TICKET': {
       const movedTickets = state.tickets.map(ticket =>
         ticket.id === action.payload.ticketId
-          ? { 
-              ...ticket, 
-              status: action.payload.newStatus,
-              domVersion: action.payload.newDomVersion // Increment for DOM recreation
-            }
+          ? { ...ticket, status: action.payload.newStatus }
           : ticket
       );
       return {
@@ -173,16 +169,6 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         }))
       };
     }
-
-    case 'RECREATE_DOM':
-      return {
-        ...state,
-        tickets: state.tickets.map(ticket =>
-          ticket.id === action.payload.ticketId
-            ? { ...ticket, domVersion: recreateTicketDOM(ticket.id) }
-            : ticket
-        )
-      };
 
     case 'DETECT_DEVTOOLS':
       return {

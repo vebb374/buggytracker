@@ -58,7 +58,7 @@ export const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
       {/* Render tickets */}
       {items.map((ticket, index) => (
         <TicketCard
-          key={`${ticket.id}-v${ticket.domVersion}`}
+          key={ticket.id}
           ticket={ticket}
           index={index}
           isDragging={false}
