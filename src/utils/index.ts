@@ -154,7 +154,7 @@ export const generateDeterministicSampleTickets = (): Ticket[] => {
   const users = generateSampleUsers();
   
   // Fixed base date for consistent testing
-  const baseDate = new Date('2024-01-15T10:00:00Z');
+  const baseDate = new Date('2025-07-03T10:00:00Z');
   
   return [
     {
@@ -164,7 +164,7 @@ export const generateDeterministicSampleTickets = (): Ticket[] => {
       priority: 'High',
       status: 'TODO',
       assignee: users[0].name, // Alice Johnson
-      deadline: new Date('2024-01-25T09:00:00Z'),
+      deadline: new Date('2025-07-13T09:00:00Z'),
       tags: ['Critical', 'Mobile', 'Safari', 'Bug'],
       createdAt: new Date(baseDate.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
     },
@@ -175,7 +175,7 @@ export const generateDeterministicSampleTickets = (): Ticket[] => {
       priority: 'Medium',
       status: 'WORKING',
       assignee: users[1].name, // Bob Smith
-      deadline: new Date('2024-01-30T17:00:00Z'),
+      deadline: new Date('2025-07-18T17:00:00Z'),
       tags: ['Performance', 'Frontend', 'Database'],
       createdAt: new Date(baseDate.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
     },
@@ -186,7 +186,7 @@ export const generateDeterministicSampleTickets = (): Ticket[] => {
       priority: 'High',
       status: 'WORKING',
       assignee: users[2].name, // Carol Williams
-      deadline: new Date('2024-01-22T12:00:00Z'),
+      deadline: new Date('2025-07-10T12:00:00Z'),
       tags: ['Backend', 'Integration', 'Critical'],
       createdAt: new Date(baseDate.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
     },
@@ -197,7 +197,7 @@ export const generateDeterministicSampleTickets = (): Ticket[] => {
       priority: 'Medium',
       status: 'TODO',
       assignee: users[3].name, // David Brown
-      deadline: new Date('2024-02-05T14:00:00Z'),
+      deadline: new Date('2025-07-24T14:00:00Z'),
       tags: ['Feature Request', 'Backend', 'Search'],
       createdAt: new Date(baseDate.getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
     },
