@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { ConfigProvider, Layout, Typography, Button, Badge, Space, Drawer } from 'antd';
+import { ConfigProvider, Layout, Typography, Button, Badge, Space, Drawer, App as AntApp } from 'antd';
 import { BugOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
-import { AppProvider, useTickets } from './hooks/useAppContext';
+import { AppProvider } from './hooks/useAppContext';
+import { useTickets } from './hooks/customHooks';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AlertSystem } from './components/AlertSystem';
 import { IFramePanel } from './components/IFramePanel';
@@ -95,7 +96,7 @@ const useResponsive = () => {
 
 // Main App Component
 const AppContent: React.FC = () => {
-  const { updateTicket } = useTickets();
+  const { updateTicket, addTicket } = useTickets();
   const { isMobile, isTablet, isDesktop } = useResponsive();
   
   // Phase 5: Enhanced state management for responsive UI
@@ -118,6 +119,9 @@ const AppContent: React.FC = () => {
   const handleEditorSave = (ticket: Ticket) => {
     if (editingTicket) {
       updateTicket(ticket.id, ticket);
+    } else {
+      // Creating new ticket - add to tickets array
+      addTicket({ ...ticket, status: 'TODO' });
     }
     setIsEditorOpen(false);
     setEditingTicket(null);
@@ -186,60 +190,75 @@ const AppContent: React.FC = () => {
             zIndex: 1000,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '16px' }}>
-            <BugOutlined style={{ fontSize: isMobile ? '24px' : '28px', color: 'white' }} />
-            <div>
-              <Title 
-                level={3} 
-                style={{ 
-                  margin: 0, 
-                  color: 'white',
-                  fontSize: isMobile ? '18px' : '24px'
-                }}
-                className="header-title"
-              >
-                BugTracker Pro
-              </Title>
-              {!isMobile && (
-                <Text 
-                  style={{ color: '#e6f7ff', fontSize: '12px' }}
-                  className="header-subtitle"
-                >
-                  The Unreliable Edition™
-                </Text>
-              )}
-            </div>
+          {/* Left section (for spacing) */}
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+            <BugOutlined style={{ fontSize: isMobile ? '28px' : '32px', color: 'white' }} />
+          </div>
+
+          {/* Center section (Title) */}
+          <div style={{ flex: 1, textAlign: 'center' }}>
+            <Title 
+              level={1} 
+              style={{ 
+                margin: 0, 
+                color: 'white',
+                fontSize: isMobile ? '24px' : '36px',
+                fontWeight: 600,
+              }}
+              className="header-title"
+            >
+              BuggyTracker
+            </Title>
           </div>
           
-          <Space className="header-actions" size={isMobile ? 'small' : 'middle'}>
-            {isMobile && (
-              <Button 
-                type="text" 
-                icon={<MenuOutlined />} 
-                onClick={toggleSidebar}
-                style={{ color: 'white' }}
-                aria-label="Toggle sidebar"
-              />
-            )}
-            <Badge count={5} size="small">
-              <Button 
-                type="text" 
-                icon={<SettingOutlined />} 
-                style={{ color: 'white' }}
-                size={isMobile ? 'small' : 'middle'}
-              >
-                {!isMobile && 'Settings'}
-              </Button>
-            </Badge>
-            <Button 
-              type="text" 
-              icon={<UserOutlined />} 
-              style={{ color: 'white' }}
-              size={isMobile ? 'small' : 'middle'}
-            >
-              {!isMobile && 'Admin User'}
-            </Button>
-          </Space>
+          {/* Right section (Buttons) */}
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+              <Space className="header-actions" size={isMobile ? 'small' : 'middle'}>
+                <Button 
+                  type="primary"
+                  icon={<BugOutlined />}
+                  onClick={() => {
+                    setEditingTicket(null);
+                    setIsEditorOpen(true);
+                  }}
+                  style={{ 
+                    background: '#ff4d4f',
+                    borderColor: '#ff4d4f',
+                    fontWeight: 'bold'
+                  }}
+                  size={isMobile ? 'small' : 'middle'}
+                >
+                  {!isMobile && 'Create Bug'}
+                </Button>
+                {isMobile && (
+                  <Button 
+                    type="text" 
+                    icon={<MenuOutlined />} 
+                    onClick={toggleSidebar}
+                    style={{ color: 'white' }}
+                    aria-label="Toggle sidebar"
+                  />
+                )}
+                <Badge count={5} size="small">
+                  <Button 
+                    type="text" 
+                    icon={<SettingOutlined />} 
+                    style={{ color: 'white' }}
+                    size={isMobile ? 'small' : 'middle'}
+                  >
+                    {!isMobile && 'Settings'}
+                  </Button>
+                </Badge>
+                <Button 
+                  type="text" 
+                  icon={<UserOutlined />} 
+                  style={{ color: 'white' }}
+                  size={isMobile ? 'small' : 'middle'}
+                >
+                  {!isMobile && 'Admin User'}
+                </Button>
+              </Space>
+          </div>
         </Header>
 
         <Layout>
@@ -364,7 +383,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AppProvider>
-      <AppContent />
+      <AntApp>
+        <AppContent />
+      </AntApp>
     </AppProvider>
   );
 };

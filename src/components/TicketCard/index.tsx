@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Draggable } from '@hello-pangea/dnd';
 import { Card, Typography, Tag, Space, Tooltip, Button } from 'antd';
+import { Draggable } from '@hello-pangea/dnd';
 import { 
   CalendarOutlined, 
   UserOutlined, 
   EditOutlined,
   ClockCircleOutlined,
-  BugOutlined 
+  BugOutlined,
+  ArrowRightOutlined 
 } from '@ant-design/icons';
 import type { TicketCardProps } from '../../types';
 import { formatDate } from '../../utils';
@@ -27,7 +28,8 @@ interface ExtendedTicketCardProps extends TicketCardProps {
 export const TicketCard: React.FC<ExtendedTicketCardProps> = ({ 
   ticket, 
   index,
-  onEdit
+  onEdit,
+  onNextColumn,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -46,6 +48,8 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
     return status === 'DONE' ? 0.6 : 1;
   };
 
+  const canMoveNext = ticket.status !== 'DONE';
+
   return (
     <Draggable draggableId={ticket.id} index={index}>
       {(provided, snapshot) => (
@@ -56,9 +60,6 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
           style={{
             ...provided.draggableProps.style,
             opacity: getStatusOpacity(ticket.status),
-            transform: snapshot.isDragging 
-              ? `${provided.draggableProps.style?.transform} rotate(5deg)` 
-              : provided.draggableProps.style?.transform,
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -76,7 +77,6 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
                   : '0 2px 4px rgba(0,0,0,0.04)',
               transition: 'all 0.2s ease',
               cursor: 'grab',
-              transform: isHovered && !snapshot.isDragging ? 'translateY(-2px)' : 'none',
               background: ticket.status === 'DONE' ? '#fafafa' : '#ffffff'
             }}
             styles={{ body: { padding: '12px' } }}
@@ -104,20 +104,41 @@ export const TicketCard: React.FC<ExtendedTicketCardProps> = ({
               </Space>
               
               {isHovered && (
-                <Button
-                  type="text"
-                  size="small"
-                  icon={<EditOutlined />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEdit?.(ticket);
-                  }}
-                  style={{ 
-                    opacity: 0.7,
-                    padding: '2px 4px',
-                    height: 'auto'
-                  }}
-                />
+                <Space>
+                    {canMoveNext && (
+                        <Tooltip title={`Move to next column`}>
+                            <Button
+                                type="text"
+                                size="small"
+                                icon={<ArrowRightOutlined />}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onNextColumn?.(ticket);
+                                }}
+                                style={{
+                                    opacity: 0.7,
+                                    padding: '2px 4px',
+                                    height: 'auto',
+                                    color: '#52c41a'
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                  <Button
+                    type="text"
+                    size="small"
+                    icon={<EditOutlined />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit?.(ticket);
+                    }}
+                    style={{ 
+                      opacity: 0.7,
+                      padding: '2px 4px',
+                      height: 'auto'
+                    }}
+                  />
+                </Space>
               )}
             </div>
 

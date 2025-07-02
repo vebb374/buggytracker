@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Button, Divider, Badge, Space } from 'antd';
 import { 
   UnorderedListOutlined, 
@@ -6,7 +6,7 @@ import {
   ExpandOutlined,
   MinusOutlined 
 } from '@ant-design/icons';
-import { useUI } from '../../hooks/useAppContext';
+import { useUI } from '../../hooks/customHooks';
 
 const { Title, Text } = Typography;
 

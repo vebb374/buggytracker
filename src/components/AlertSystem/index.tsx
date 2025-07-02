@@ -6,10 +6,11 @@ import {
   CloseCircleOutlined,
   InfoCircleOutlined 
 } from '@ant-design/icons';
-import { useToasts } from '../../hooks/useAppContext';
+import { useToasts } from '../../hooks/customHooks';
 
 export const AlertSystem: React.FC = () => {
   const { toasts, removeToast } = useToasts();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     // Configure notification global settings
@@ -35,7 +36,7 @@ export const AlertSystem: React.FC = () => {
       // Random positioning for automation challenges
       const randomPosition = Math.random() > 0.5 ? 'topRight' : 'topLeft';
       
-      notification.open({
+      api.open({
         key: toast.id,
         message: toast.message,
         icon: getIcon(),
@@ -51,9 +52,7 @@ export const AlertSystem: React.FC = () => {
         }
       });
     });
-  }, [toasts, removeToast]);
+  }, [toasts, removeToast, api]);
 
-  // This component doesn't render anything visible
-  // The notifications are handled by Ant Design's notification system
-  return null;
+  return <>{contextHolder}</>;
 }; 

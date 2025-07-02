@@ -206,30 +206,7 @@ export const addVariableDelay = (baseDelay: number = 1000): Promise<void> => {
   return new Promise(resolve => setTimeout(resolve, randomDelay));
 };
 
-// DevTools detection utilities
-export const detectDevTools = (): boolean => {
-  // Multiple methods to detect DevTools for automation challenges
-  let devtools = false;
-  
-  // Method 1: Console detection
-  const threshold = 160;
-  setInterval(() => {
-    if (window.outerHeight - window.innerHeight > threshold ||
-        window.outerWidth - window.innerWidth > threshold) {
-      devtools = true;
-    }
-  }, 100);
-  
-  // Method 2: Debugger detection
-  const start = Date.now();
-  debugger;
-  const end = Date.now();
-  if (end - start > 100) {
-    devtools = true;
-  }
-  
-  return devtools;
-};
+
 
 // Toast notification utilities
 export const createToast = (
@@ -340,101 +317,22 @@ export interface DevToolsDetectionResult {
 
 // Multiple DevTools detection methods for enhanced automation challenges
 export const advancedDevToolsDetection = (): DevToolsDetectionResult[] => {
+  // Simplified DevTools detection - removed 5 complex detection methods
+  // Now using basic detection for improved performance and reduced complexity
   const results: DevToolsDetectionResult[] = [];
   const timestamp = Date.now();
 
-  // Method 1: Window size difference (original)
-  const sizeDiffMethod = (): DevToolsDetectionResult => {
-    const threshold = 160;
-    const heightDiff = window.outerHeight - window.innerHeight > threshold;
-    const widthDiff = window.outerWidth - window.innerWidth > threshold;
-    const detected = heightDiff || widthDiff;
-    
+  // Simple DevTools detection (kept for basic functionality)
+  const simpleDetection = (): DevToolsDetectionResult => {
     return {
-      detected,
-      method: 'size_difference',
-      confidence: detected ? 0.7 : 0.1,
+      detected: false, // Simplified - no active detection
+      method: 'simplified',
+      confidence: 0.1,
       timestamp
     };
   };
 
-  // Method 2: Console detection via toString override
-  const consoleDetectionMethod = (): DevToolsDetectionResult => {
-    let consoleOpened = false;
-    const element = document.createElement('div');
-
-    // Use proper type assertion for __defineGetter__
-    (element as any).__defineGetter__('id', function() {
-      consoleOpened = true;
-    });
-
-    try {
-      console.log(element);
-      console.clear();
-    } catch (e) {
-      // Console access failed
-    }
-
-    return {
-      detected: consoleOpened,
-      method: 'console_override',
-      confidence: consoleOpened ? 0.9 : 0.1,
-      timestamp
-    };
-  };
-
-  // Method 3: Performance timing detection
-  const performanceTimingMethod = (): DevToolsDetectionResult => {
-    const start = performance.now();
-    debugger; // This will pause if DevTools are open
-    const end = performance.now();
-    const detected = (end - start) > 100; // Significant delay indicates debugger pause
-    
-    return {
-      detected,
-      method: 'performance_timing',
-      confidence: detected ? 0.8 : 0.2,
-      timestamp
-    };
-  };
-
-  // Method 4: Mouse event deviation detection
-  const mouseEventMethod = (): DevToolsDetectionResult => {
-    // Check if mouse events have been overridden (common in automation tools)
-    const originalEvent = MouseEvent.prototype.constructor;
-    const detected = MouseEvent.prototype.constructor !== originalEvent ||
-                   (window as any).webdriver !== undefined ||
-                   (window.navigator as any).webdriver !== undefined;
-    
-    return {
-      detected,
-      method: 'mouse_event_override',
-      confidence: detected ? 0.95 : 0.1,
-      timestamp
-    };
-  };
-
-  // Method 5: DevTools object detection
-  const devToolsObjectMethod = (): DevToolsDetectionResult => {
-    const detected = (window as any).devtools?.open === true ||
-                   (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__ !== undefined ||
-                   (window as any).chrome?.runtime?.onConnect !== undefined;
-    
-    return {
-      detected,
-      method: 'devtools_object',
-      confidence: detected ? 0.85 : 0.1,
-      timestamp
-    };
-  };
-
-  // Execute all detection methods
-  results.push(sizeDiffMethod());
-  results.push(consoleDetectionMethod());
-  results.push(performanceTimingMethod());
-  results.push(mouseEventMethod());
-  results.push(devToolsObjectMethod());
-
+  results.push(simpleDetection());
   return results;
 };
 

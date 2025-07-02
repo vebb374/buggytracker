@@ -116,6 +116,7 @@ export interface TicketCardProps {
   ticket: Ticket;
   onEdit?: (ticket: Ticket) => void;
   onDelete?: (ticketId: string) => void;
+  onNextColumn?: (ticket: Ticket) => void;
   isDragging?: boolean;
 }
 
@@ -124,6 +125,7 @@ export interface ColumnContainerProps {
   tickets: Ticket[];
   onTicketMove?: (ticketId: string, newStatus: Ticket['status']) => void;
   onEditTicket?: (ticket: Ticket) => void;
+  onNextColumn?: (ticket: Ticket) => void;
 }
 
 export interface TicketEditorProps {
