@@ -328,4 +328,415 @@ export const getRandomLoadingMessage = (): string => {
     'Please wait...'
   ];
   return messages[Math.floor(Math.random() * messages.length)];
+};
+
+// Phase 4: Enhanced DevTools Detection Methods
+export interface DevToolsDetectionResult {
+  detected: boolean;
+  method: string;
+  confidence: number;
+  timestamp: number;
+}
+
+// Multiple DevTools detection methods for enhanced automation challenges
+export const advancedDevToolsDetection = (): DevToolsDetectionResult[] => {
+  const results: DevToolsDetectionResult[] = [];
+  const timestamp = Date.now();
+
+  // Method 1: Window size difference (original)
+  const sizeDiffMethod = (): DevToolsDetectionResult => {
+    const threshold = 160;
+    const heightDiff = window.outerHeight - window.innerHeight > threshold;
+    const widthDiff = window.outerWidth - window.innerWidth > threshold;
+    const detected = heightDiff || widthDiff;
+    
+    return {
+      detected,
+      method: 'size_difference',
+      confidence: detected ? 0.7 : 0.1,
+      timestamp
+    };
+  };
+
+  // Method 2: Console detection via toString override
+  const consoleDetectionMethod = (): DevToolsDetectionResult => {
+    let consoleOpened = false;
+    const element = document.createElement('div');
+
+    // Use proper type assertion for __defineGetter__
+    (element as any).__defineGetter__('id', function() {
+      consoleOpened = true;
+    });
+
+    try {
+      console.log(element);
+      console.clear();
+    } catch (e) {
+      // Console access failed
+    }
+
+    return {
+      detected: consoleOpened,
+      method: 'console_override',
+      confidence: consoleOpened ? 0.9 : 0.1,
+      timestamp
+    };
+  };
+
+  // Method 3: Performance timing detection
+  const performanceTimingMethod = (): DevToolsDetectionResult => {
+    const start = performance.now();
+    debugger; // This will pause if DevTools are open
+    const end = performance.now();
+    const detected = (end - start) > 100; // Significant delay indicates debugger pause
+    
+    return {
+      detected,
+      method: 'performance_timing',
+      confidence: detected ? 0.8 : 0.2,
+      timestamp
+    };
+  };
+
+  // Method 4: Mouse event deviation detection
+  const mouseEventMethod = (): DevToolsDetectionResult => {
+    // Check if mouse events have been overridden (common in automation tools)
+    const originalEvent = MouseEvent.prototype.constructor;
+    const detected = MouseEvent.prototype.constructor !== originalEvent ||
+                   (window as any).webdriver !== undefined ||
+                   (window.navigator as any).webdriver !== undefined;
+    
+    return {
+      detected,
+      method: 'mouse_event_override',
+      confidence: detected ? 0.95 : 0.1,
+      timestamp
+    };
+  };
+
+  // Method 5: DevTools object detection
+  const devToolsObjectMethod = (): DevToolsDetectionResult => {
+    const detected = (window as any).devtools?.open === true ||
+                   (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__ !== undefined ||
+                   (window as any).chrome?.runtime?.onConnect !== undefined;
+    
+    return {
+      detected,
+      method: 'devtools_object',
+      confidence: detected ? 0.85 : 0.1,
+      timestamp
+    };
+  };
+
+  // Execute all detection methods
+  results.push(sizeDiffMethod());
+  results.push(consoleDetectionMethod());
+  results.push(performanceTimingMethod());
+  results.push(mouseEventMethod());
+  results.push(devToolsObjectMethod());
+
+  return results;
+};
+
+// Enhanced DOM recreation patterns for Phase 4
+export const enhancedDOMRecreation = {
+  // Pattern 1: Cascade recreation (recreate parent and all children)
+  cascadeRecreation: (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const parent = element.parentElement;
+      if (parent) {
+        // Store original content
+        const originalHTML = parent.innerHTML;
+        // Recreate with delay
+        setTimeout(() => {
+          parent.innerHTML = '';
+          setTimeout(() => {
+            parent.innerHTML = originalHTML;
+            // Add version tracking
+            const newVersion = Date.now().toString();
+            element.setAttribute('data-dom-version', newVersion);
+          }, Math.random() * 1000 + 500);
+        }, Math.random() * 500);
+      }
+    }
+  },
+
+  // Pattern 2: Attribute scrambling (change attributes randomly)
+  attributeScrambling: (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const attributes = ['data-testid', 'class', 'id'];
+      attributes.forEach(attr => {
+        if (element.hasAttribute(attr)) {
+          const originalValue = element.getAttribute(attr);
+          const scrambledValue = `${originalValue}-${Math.random().toString(36).substr(2, 9)}`;
+          element.setAttribute(attr, scrambledValue);
+          
+          // Restore after random delay
+          setTimeout(() => {
+            element.setAttribute(attr, originalValue || '');
+          }, Math.random() * 2000 + 1000);
+        }
+      });
+    }
+  },
+
+  // Pattern 3: Element displacement (move element temporarily)
+  elementDisplacement: (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const originalParent = element.parentElement;
+      const placeholder = document.createElement('div');
+      placeholder.style.display = 'none';
+      
+      // Replace with placeholder
+      originalParent?.insertBefore(placeholder, element);
+      element.remove();
+      
+      // Restore after delay
+      setTimeout(() => {
+        if (originalParent && placeholder.parentElement) {
+          originalParent.insertBefore(element, placeholder);
+          placeholder.remove();
+        }
+      }, Math.random() * 3000 + 1000);
+    }
+  },
+
+  // Pattern 4: Style mutation (change styles temporarily)
+  styleMutation: (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const originalStyles = element.style.cssText;
+      const mutations = [
+        'transform: scale(0.99)',
+        'opacity: 0.99',
+        'filter: brightness(0.99)',
+        'margin: 0.1px'
+      ];
+      
+      const randomMutation = mutations[Math.floor(Math.random() * mutations.length)];
+      element.style.cssText += `;${randomMutation}`;
+      
+      // Restore after delay
+      setTimeout(() => {
+        element.style.cssText = originalStyles;
+      }, Math.random() * 1500 + 500);
+    }
+  }
+};
+
+// Complex timing-based interactions for Phase 4
+export const complexTimingChallenges = {
+  // Progressive delays that increase over time
+  progressiveDelay: (() => {
+    let callCount = 0;
+    return (baseDelay: number = 1000): Promise<void> => {
+      callCount++;
+      const progressiveMultiplier = 1 + (callCount * 0.1); // Increases by 10% each call
+      const delay = baseDelay * progressiveMultiplier;
+      return new Promise(resolve => setTimeout(resolve, delay));
+    };
+  })(),
+
+  // Random burst delays (sometimes fast, sometimes very slow)
+  burstDelay: (fastDelay: number = 100, slowDelay: number = 5000): Promise<void> => {
+    const useFastDelay = Math.random() < 0.7; // 70% chance of fast, 30% slow
+    const delay = useFastDelay ? fastDelay + Math.random() * 200 : slowDelay + Math.random() * 3000;
+    return new Promise(resolve => setTimeout(resolve, delay));
+  },
+
+  // Time-of-day based delays (slower during certain hours)
+  timeBasedDelay: (baseDelay: number = 1000): Promise<void> => {
+    const hour = new Date().getHours();
+    let multiplier = 1;
+    
+    // Slower during typical testing hours (9-17)
+    if (hour >= 9 && hour <= 17) {
+      multiplier = 1.5 + Math.random() * 0.5; // 1.5x to 2x slower
+    }
+    
+    const delay = baseDelay * multiplier;
+    return new Promise(resolve => setTimeout(resolve, delay));
+  },
+
+  // Network-simulation delays with connection quality simulation
+  networkSimulationDelay: (): Promise<void> => {
+    const connectionTypes = [
+      { name: 'fast', baseDelay: 50, variation: 50 },
+      { name: 'normal', baseDelay: 200, variation: 100 },
+      { name: 'slow', baseDelay: 1000, variation: 500 },
+      { name: 'unstable', baseDelay: 2000, variation: 3000 }
+    ];
+    
+    const connection = connectionTypes[Math.floor(Math.random() * connectionTypes.length)];
+    const delay = connection.baseDelay + Math.random() * connection.variation;
+    
+    return new Promise(resolve => setTimeout(resolve, delay));
+  }
+};
+
+// Advanced stale element scenarios for Phase 4
+export const advancedStaleElementScenarios = {
+  // Multi-layer stale elements (parent becomes stale, then children)
+  multiLayerStale: (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      // First, make parent stale
+      const parent = element.parentElement;
+      if (parent) {
+        recreateTicketDOM(parent.id || elementId);
+        
+        // Then after delay, make children stale
+        setTimeout(() => {
+          const children = element.querySelectorAll('*');
+          children.forEach((child, index) => {
+            setTimeout(() => {
+              if (child.id) {
+                recreateTicketDOM(child.id);
+              }
+            }, index * 200); // Stagger child recreation
+          });
+        }, 1000);
+      }
+    }
+  },
+
+  // Conditional stale elements (only become stale under certain conditions)
+  conditionalStale: (elementId: string, condition: () => boolean) => {
+    if (condition()) {
+      setTimeout(() => {
+        recreateTicketDOM(elementId);
+        
+        // Chain additional stale scenarios
+        setTimeout(() => {
+          if (Math.random() < 0.3) { // 30% chance of secondary stale
+            recreateTicketDOM(elementId);
+          }
+        }, Math.random() * 2000 + 1000);
+      }, Math.random() * 1000);
+    }
+  },
+
+  // Intermittent stale elements (randomly become stale over time)
+  intermittentStale: (elementId: string, duration: number = 30000) => {
+    const startTime = Date.now();
+    const checkInterval = setInterval(() => {
+      if (Date.now() - startTime > duration) {
+        clearInterval(checkInterval);
+        return;
+      }
+      
+      // Random chance of becoming stale (increases over time)
+      const elapsedTime = Date.now() - startTime;
+      const staleChance = (elapsedTime / duration) * 0.1; // Up to 10% chance
+      
+      if (Math.random() < staleChance) {
+        recreateTicketDOM(elementId);
+        
+        // Apply enhanced DOM recreation patterns
+        if (Math.random() < 0.5) {
+          enhancedDOMRecreation.attributeScrambling(elementId);
+        }
+        if (Math.random() < 0.3) {
+          enhancedDOMRecreation.elementDisplacement(elementId);
+        }
+      }
+    }, 2000 + Math.random() * 3000); // Check every 2-5 seconds
+  }
+};
+
+// Phase 4: Comprehensive automation challenge coordinator
+export const phase4AutomationChallenges = {
+  // Initialize all Phase 4 challenges
+  initialize: () => {
+    console.log('🎯 Phase 4 Enhanced Automation Challenges Initialized');
+    
+    // Start comprehensive DevTools monitoring
+    setInterval(() => {
+      const results = advancedDevToolsDetection();
+      const detected = results.some(r => r.detected && r.confidence > 0.5);
+      
+      if (detected) {
+        // Trigger enhanced challenges when DevTools detected
+        const ticketElements = document.querySelectorAll('[data-testid*="ticket-card"]');
+        ticketElements.forEach((element, index) => {
+          if (element.id) {
+            setTimeout(() => {
+              const challengeType = Math.floor(Math.random() * 4);
+              switch (challengeType) {
+                case 0:
+                  enhancedDOMRecreation.cascadeRecreation(element.id);
+                  break;
+                case 1:
+                  enhancedDOMRecreation.attributeScrambling(element.id);
+                  break;
+                case 2:
+                  enhancedDOMRecreation.elementDisplacement(element.id);
+                  break;
+                case 3:
+                  enhancedDOMRecreation.styleMutation(element.id);
+                  break;
+              }
+            }, index * 500); // Stagger challenges
+          }
+        });
+      }
+    }, 3000); // Check every 3 seconds
+    
+    // Start intermittent stale element scenarios
+    setTimeout(() => {
+      const ticketElements = document.querySelectorAll('[data-testid*="ticket-card"]');
+      ticketElements.forEach(element => {
+        if (element.id) {
+          advancedStaleElementScenarios.intermittentStale(element.id, 60000); // 1 minute duration
+        }
+      });
+    }, 5000);
+  },
+
+  // Apply challenges to specific element
+  applyToElement: (elementId: string, intensity: 'low' | 'medium' | 'high' = 'medium') => {
+    const intensityConfig = {
+      low: { patterns: 1, timing: 'normal', stale: false },
+      medium: { patterns: 2, timing: 'complex', stale: true },
+      high: { patterns: 3, timing: 'burst', stale: true }
+    };
+    
+    const config = intensityConfig[intensity];
+    
+    // Apply DOM recreation patterns
+    for (let i = 0; i < config.patterns; i++) {
+      setTimeout(() => {
+        const pattern = Math.floor(Math.random() * 4);
+        switch (pattern) {
+          case 0:
+            enhancedDOMRecreation.cascadeRecreation(elementId);
+            break;
+          case 1:
+            enhancedDOMRecreation.attributeScrambling(elementId);
+            break;
+          case 2:
+            enhancedDOMRecreation.elementDisplacement(elementId);
+            break;
+          case 3:
+            enhancedDOMRecreation.styleMutation(elementId);
+            break;
+        }
+      }, i * 1000);
+    }
+    
+    // Apply complex timing
+    if (config.timing === 'complex') {
+      complexTimingChallenges.progressiveDelay(500);
+    } else if (config.timing === 'burst') {
+      complexTimingChallenges.burstDelay();
+    }
+    
+    // Apply stale element scenarios
+    if (config.stale) {
+      advancedStaleElementScenarios.conditionalStale(elementId, () => Math.random() < 0.4);
+    }
+  }
 }; 

@@ -1,68 +1,430 @@
+/* Phase 5: Enhanced Responsive Design & Performance Optimization */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Typography System */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  
+  /* Color System */
+  color-scheme: light;
+  color: #262626;
+  background-color: #ffffff;
+  
+  /* Performance Optimizations */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* CSS Custom Properties for Responsive Design */
+  --header-height: 64px;
+  --sidebar-width: 350px;
+  --sidebar-width-collapsed: 0px;
+  --content-padding: 24px;
+  --content-padding-mobile: 16px;
+  --border-radius: 8px;
+  --border-radius-large: 12px;
+  --shadow-small: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-medium: 0 4px 16px rgba(0,0,0,0.08);
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  
+  /* Responsive Breakpoints */
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-large: 1440px;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Global Reset & Base Styles */
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #f5f5f5;
+  overflow-x: hidden;
+  
+  /* Performance: GPU acceleration for smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Responsive Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+h4 { font-size: clamp(1.1rem, 2vw, 1.25rem); }
+
+/* Responsive Links */
+a {
+  font-weight: 500;
+  color: #1890ff;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: #40a9ff;
+}
+
+/* Enhanced Button Styles */
 button {
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all var(--transition-fast);
+  
+  /* Performance: Prevent layout shifts */
+  contain: layout style;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid #1890ff;
+  outline-offset: 2px;
+}
+
+/* Phase 5: Responsive Layout Classes */
+.responsive-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}
+
+@media (max-width: 768px) {
+  .responsive-container {
+    padding: 0 var(--content-padding-mobile);
   }
-  a:hover {
-    color: #747bff;
+}
+
+/* Responsive Grid System */
+.responsive-grid {
+  display: grid;
+  gap: var(--content-padding);
+  width: 100%;
+}
+
+.responsive-grid.desktop-two-col {
+  grid-template-columns: 1fr auto;
+}
+
+@media (max-width: 1024px) {
+  .responsive-grid.desktop-two-col {
+    grid-template-columns: 1fr;
+    gap: var(--content-padding-mobile);
   }
+}
+
+/* Phase 5: Mobile-First Kanban Layout */
+.kanban-container {
+  display: grid;
+  gap: 16px;
+  padding: var(--content-padding-mobile);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: Single column, horizontal scroll */
+@media (max-width: 767px) {
+  .kanban-container {
+    grid-template-columns: repeat(3, minmax(280px, 1fr));
+    padding: var(--content-padding-mobile);
+  }
+  
+  .kanban-column {
+    scroll-snap-align: start;
+    min-width: 280px;
+  }
+}
+
+/* Tablet: Three columns, standard grid */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kanban-container {
+    grid-template-columns: repeat(3, 1fr);
+    padding: var(--content-padding);
+  }
+}
+
+/* Desktop: Three columns with more spacing */
+@media (min-width: 1024px) {
+  .kanban-container {
+    grid-template-columns: repeat(3, 1fr);
+    padding: var(--content-padding);
+    gap: var(--content-padding);
+  }
+}
+
+/* Phase 5: Mobile-Optimized Ticket Cards */
+.ticket-card {
+  width: 100%;
+  margin-bottom: 12px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-small);
+  transition: all var(--transition-fast);
+  
+  /* Performance optimizations */
+  contain: layout style;
+  will-change: transform;
+}
+
+.ticket-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+@media (max-width: 767px) {
+  .ticket-card {
+    margin-bottom: 8px;
+    padding: 12px;
+  }
+  
+  .ticket-card .ticket-title {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .ticket-card .ticket-meta {
+    font-size: 12px;
+  }
+}
+
+/* Phase 5: Responsive Header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--header-height);
+  background: #1890ff;
+  box-shadow: var(--shadow-medium);
+  
+  /* Performance: Force layer creation */
+  transform: translateZ(0);
+}
+
+@media (max-width: 767px) {
+  .app-header {
+    height: 56px;
+    --header-height: 56px;
+  }
+  
+  .app-header .header-title {
+    font-size: 18px;
+  }
+  
+  .app-header .header-subtitle {
+    display: none;
+  }
+  
+  .app-header .header-actions {
+    gap: 8px;
+  }
+}
+
+/* Phase 5: Responsive Sidebar */
+.sidebar-panel {
+  width: var(--sidebar-width);
+  transition: width var(--transition-medium);
+  overflow: hidden;
+}
+
+.sidebar-panel.collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+@media (max-width: 1023px) {
+  .sidebar-panel {
+    position: fixed;
+    top: var(--header-height);
+    right: -100%;
+    height: calc(100vh - var(--header-height));
+    z-index: 999;
+    background: white;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.1);
+    transition: right var(--transition-medium);
+  }
+  
+  .sidebar-panel.mobile-open {
+    right: 0;
+  }
+}
+
+/* Phase 5: Touch-Friendly Interactive Elements */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch devices: Larger touch targets */
+  button, 
+  .clickable,
+  .ant-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+  
+  .ticket-card {
+    padding: 16px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  .ticket-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-small);
+  }
+}
+
+/* Phase 5: Performance Optimizations */
+.performance-optimized {
+  /* Reduce paint complexity */
+  contain: layout style paint;
+  
+  /* Optimize animations */
+  will-change: transform;
+  
+  /* Hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .ticket-card {
+    border: 2px solid #000;
+  }
+  
   button {
-    background-color: #f9f9f9;
+    border: 2px solid currentColor;
   }
+}
+
+/* Phase 5: Loading States Optimization */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  
+  /* Prevent layout shift during loading */
+  contain: layout;
+}
+
+@media (max-width: 767px) {
+  .loading-container {
+    min-height: 150px;
+  }
+}
+
+/* Phase 5: Scroll Optimization */
+.scroll-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  
+  /* Performance: Touch scrolling */
+  -webkit-overflow-scrolling: touch;
+  
+  /* Custom scrollbar for webkit browsers */
+  scrollbar-width: thin;
+  scrollbar-color: #d9d9d9 transparent;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+/* Phase 5: Print Styles */
+@media print {
+  .sidebar-panel,
+  .app-header .header-actions,
+  .development-panel {
+    display: none !important;
+  }
+  
+  .kanban-container {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  .ticket-card {
+    break-inside: avoid;
+    margin-bottom: 10px;
+  }
+}
+
+/* Phase 5: Focus Management */
+.focus-trap {
+  /* Ensure focus stays within modal/dialog */
+  position: relative;
+}
+
+.focus-trap:focus-within {
+  outline: none;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  z-index: 10000;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 6px;
 }

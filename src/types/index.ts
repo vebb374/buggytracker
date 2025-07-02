@@ -122,8 +122,8 @@ export interface TicketCardProps {
 export interface ColumnContainerProps {
   column: Column;
   tickets: Ticket[];
-  onTicketMove: (ticketId: string, newStatus: Ticket['status']) => void;
-  maxTickets?: number;
+  onTicketMove?: (ticketId: string, newStatus: Ticket['status']) => void;
+  onEditTicket?: (ticket: Ticket) => void;
 }
 
 export interface TicketEditorProps {

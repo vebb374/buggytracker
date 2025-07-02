@@ -1,184 +1,138 @@
 import React from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import { Card, Typography, Badge, Space, Alert } from 'antd';
-import { PlusOutlined, WarningOutlined } from '@ant-design/icons';
-import type { ColumnContainerProps } from '../../types';
+import { Card, Typography, Badge } from 'antd';
 import { TicketCard } from '../TicketCard';
-import { InfiniteScroll } from '../InfiniteScroll';
+import type { Ticket, ColumnContainerProps } from '../../types';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export const ColumnContainer: React.FC<ColumnContainerProps> = ({
   column,
   tickets,
-  maxTickets
+  onEditTicket,
 }) => {
-  // Color coding for columns
+  // Phase 5: Responsive design calculations
+  const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
+  const ticketCount = tickets.length;
+
+  // Phase 5: Get column color based on status
   const getColumnColor = (status: string) => {
     switch (status) {
-      case 'TODO':
-        return { 
-          headerBg: '#f6ffed', 
-          headerBorder: '#b7eb8f',
-          badgeColor: 'processing' as const
-        };
-      case 'WORKING':
-        return { 
-          headerBg: '#fff7e6', 
-          headerBorder: '#ffd591',
-          badgeColor: 'warning' as const
-        };
-      case 'DONE':
-        return { 
-          headerBg: '#f6f6f6', 
-          headerBorder: '#d9d9d9',
-          badgeColor: 'success' as const
-        };
-      default:
-        return { 
-          headerBg: '#fafafa', 
-          headerBorder: '#d9d9d9',
-          badgeColor: 'default' as const
-        };
+      case 'TODO': return '#52c41a';
+      case 'WORKING': return '#faad14';
+      case 'DONE': return '#8c8c8c';
+      default: return '#d9d9d9';
     }
   };
 
-  const colors = getColumnColor(column.status);
-  const isNearLimit = maxTickets && tickets.length >= maxTickets - 1;
-  const isAtLimit = maxTickets && tickets.length >= maxTickets;
+  const columnColor = getColumnColor(column.status);
 
   return (
     <Card
-      style={{ 
-        height: '100%',
-        border: `2px solid ${colors.headerBorder}`,
-        borderRadius: '12px'
-      }}
-      bodyStyle={{ 
-        padding: '16px',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
-      {/* Column Header */}
-      <div 
-        style={{ 
-          background: colors.headerBg,
-          borderRadius: '8px',
-          padding: '12px 16px',
-          marginBottom: '16px',
-          border: `1px solid ${colors.headerBorder}`
-        }}
-      >
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <div>
-            <Title level={4} style={{ margin: 0, color: '#262626' }}>
-              {column.name}
-            </Title>
-            <Text type="secondary" style={{ fontSize: '12px' }}>
-              {maxTickets ? `${tickets.length}/${maxTickets} tickets` : `${tickets.length} tickets`}
-            </Text>
-          </div>
+      title={
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          // Phase 5: Responsive title container
+          flexWrap: 'wrap',
+          gap: '8px',
+        }}>
+          <Title 
+            level={4} 
+            style={{ 
+              margin: 0, 
+              color: columnColor,
+              // Phase 5: Responsive font sizing
+              fontSize: isMobileView ? '16px' : '18px',
+            }}
+          >
+            {column.name}
+          </Title>
           <Badge 
-            count={tickets.length} 
-            status={colors.badgeColor}
-            style={{ backgroundColor: colors.headerBorder }}
+            count={ticketCount} 
+            style={{ 
+              backgroundColor: columnColor,
+              // Phase 5: Responsive badge sizing
+              fontSize: isMobileView ? '10px' : '12px',
+            }} 
           />
-        </Space>
-
-        {/* Working column capacity warning */}
-        {column.status === 'WORKING' && isNearLimit && (
-                      <Alert
-              message={isAtLimit ? "Column at capacity!" : "Near capacity limit"}
-              type={isAtLimit ? "error" : "warning"}
-              icon={<WarningOutlined />}
-              style={{ marginTop: '8px' }}
-            />
-        )}
-      </div>
-
-      {/* Droppable Area */}
+        </div>
+      }
+      // Phase 5: Enhanced responsive card styling
+      styles={{
+        body: { 
+          padding: isMobileView ? '12px' : '16px',
+          minHeight: '400px',
+          // Performance optimization
+          contain: 'layout style',
+        }
+      }}
+      style={{
+        height: '100%',
+        // Phase 5: Responsive styling
+        minHeight: isMobileView ? '350px' : '500px',
+        backgroundColor: '#fafafa',
+        border: `2px solid ${columnColor}20`,
+        borderRadius: isMobileView ? '6px' : '8px',
+        // Performance optimizations
+        willChange: 'transform',
+        transform: 'translateZ(0)',
+      }}
+      className="kanban-column-card"
+    >
       <Droppable droppableId={column.status}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
             style={{
-              flex: 1,
-              minHeight: '400px',
-              backgroundColor: snapshot.isDraggingOver ? '#f0f8ff' : 'transparent',
-              borderRadius: '8px',
-              border: snapshot.isDraggingOver ? '2px dashed #1890ff' : '2px dashed transparent',
+              minHeight: isMobileView ? '300px' : '400px',
+              // Phase 5: Enhanced drop zone styling with responsive design
+              backgroundColor: snapshot.isDraggingOver 
+                ? `${columnColor}10` 
+                : 'transparent',
+              borderRadius: isMobileView ? '4px' : '6px',
+              padding: isMobileView ? '4px' : '8px',
               transition: 'all 0.2s ease',
-              padding: '8px',
-              overflow: 'hidden'
+              // Performance optimization
+              contain: 'layout style',
             }}
+            className={`droppable-area ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
           >
-            {/* Tickets List */}
-            {column.status === 'TODO' ? (
-              // TODO column uses infinite scroll
-              <InfiniteScroll
-                hasMore={true}
-                items={tickets}
-              />
-            ) : (
-              // WORKING and DONE columns use regular list
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '12px',
-                height: '100%'
+            {/* Phase 5: Enhanced empty state for responsive design */}
+            {tickets.length === 0 && (
+              <div style={{
+                textAlign: 'center',
+                padding: isMobileView ? '24px 12px' : '40px 20px',
+                color: '#8c8c8c',
+                fontSize: isMobileView ? '13px' : '14px',
+                fontStyle: 'italic',
               }}>
-                {tickets.map((ticket, index) => (
-                  <TicketCard
-                    key={`${ticket.id}-v${ticket.domVersion}`} // Include domVersion for DOM recreation
-                    ticket={ticket}
-                    index={index}
-                    isDragging={snapshot.isDraggingOver}
-                  />
-                ))}
-                
-                {/* DONE column tickets are grayed out */}
-                {column.status === 'DONE' && tickets.length === 0 && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    padding: '48px 16px',
-                    color: '#999'
-                  }}>
-                    <Text type="secondary">
-                      No completed tickets yet
-                    </Text>
-                  </div>
-                )}
+                {column.status === 'TODO' && 'Drop new tickets here'}
+                {column.status === 'WORKING' && 'Drag active tasks here'}
+                {column.status === 'DONE' && 'Completed tickets go here'}
               </div>
             )}
             
-            {provided.placeholder}
-            
-            {/* Add ticket button for TODO column */}
-            {column.status === 'TODO' && (
-              <Card
-                style={{ 
-                  marginTop: '12px',
-                  border: '2px dashed #d9d9d9',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+            {/* Phase 5: Enhanced ticket rendering with responsive spacing */}
+            {tickets.map((ticket: Ticket, index: number) => (
+              <div 
+                key={ticket.id}
+                style={{
+                  marginBottom: isMobileView ? '8px' : '12px',
+                  // Performance optimization
+                  contain: 'layout',
                 }}
-                bodyStyle={{ 
-                  padding: '16px',
-                  textAlign: 'center'
-                }}
-                hoverable
               >
-                <Space>
-                  <PlusOutlined style={{ color: '#1890ff' }} />
-                  <Text style={{ color: '#1890ff' }}>
-                    Add New Ticket
-                  </Text>
-                </Space>
-              </Card>
-            )}
+                <TicketCard
+                  ticket={ticket}
+                  index={index}
+                  onEdit={onEditTicket}
+                />
+              </div>
+            ))}
+            {provided.placeholder}
           </div>
         )}
       </Droppable>

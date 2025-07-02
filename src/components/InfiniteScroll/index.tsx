@@ -9,11 +9,13 @@ import { shouldSimulateNetworkFailure, getRandomLoadingMessage } from '../../uti
 interface InfiniteScrollProps {
   hasMore: boolean;
   items: Ticket[];
+  onEditTicket?: (ticket: Ticket) => void;
 }
 
 export const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
   hasMore,
-  items
+  items,
+  onEditTicket
 }) => {
   const { loadMoreTickets, isLoading } = useTickets();
   const [localError, setLocalError] = useState<string | null>(null);
@@ -60,6 +62,7 @@ export const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
           ticket={ticket}
           index={index}
           isDragging={false}
+          onEdit={onEditTicket}
         />
       ))}
 
