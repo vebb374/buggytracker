@@ -196,19 +196,36 @@ const AppContent: React.FC = () => {
           </div>
 
           {/* Center section (Title) */}
-          <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{ flex: 1, textAlign: 'center', position: 'relative' }}>
+            {/* Floating bugs around title */}
+            <div className="bug-animation left-bugs">
+              <span className="floating-bug bug-1" style={{ top: '-15px', left: '0px' }}>🐛</span>
+              <span className="floating-bug bug-2" style={{ top: '10px', left: '-20px' }}>🐞</span>
+              <span className="floating-bug bug-3" style={{ top: '-5px', left: '-35px' }}>🦗</span>
+              <span className="floating-bug bug-4" style={{ top: '25px', left: '-10px' }}>🕷️</span>
+            </div>
+            
             <Title 
               level={1} 
               style={{ 
                 margin: 0, 
                 color: 'white',
-                fontSize: isMobile ? '24px' : '36px',
-                fontWeight: 600,
+                fontSize: isMobile ? '28px' : '42px',
+                fontWeight: 700,
+                position: 'relative',
+                zIndex: 10,
               }}
-              className="header-title"
+              className="header-title quirky-title"
             >
-              BuggyTracker
+              🐛 BuggyTracker 🚀
             </Title>
+            
+            <div className="bug-animation right-bugs">
+              <span className="floating-bug bug-5" style={{ top: '-20px', right: '0px' }}>🦋</span>
+              <span className="floating-bug bug-6" style={{ top: '5px', right: '-25px' }}>🐜</span>
+              <span className="floating-bug bug-1" style={{ top: '-10px', right: '-40px' }}>🐝</span>
+              <span className="floating-bug bug-2" style={{ top: '20px', right: '-15px' }}>🦟</span>
+            </div>
           </div>
           
           {/* Right section (Buttons) */}

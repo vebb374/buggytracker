@@ -3,28 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>System Logs</title>
+  <title>System Logs - BugTracker Pro</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
       margin: 20px;
-      color: #333;
+      color: #262626;
+      background-color: #ffffff;
     }
     iframe {
-      border: 1px solid #e0e0e0;
+      border: 1px solid #d9d9d9;
       border-radius: 8px;
       width: 100%;
       height: 400px;
       box-sizing: border-box;
+      transition: border-color 0.2s ease;
+    }
+    iframe:hover {
+      border-color: #1890ff;
     }
     h3 {
       margin-top: 0;
+      color: #1890ff;
+    }
+    .log-entry {
+      background: #fafafa;
+      padding: 8px 12px;
+      margin: 8px 0;
+      border-radius: 4px;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      font-size: 14px;
+      border-left: 3px solid #52c41a;
+    }
+    .warning-log {
+      border-left-color: #faad14;
+    }
+    .error-log {
+      border-left-color: #ff4d4f;
     }
   </style>
 </head>
 <body>
-  <h3>Main Frame: system-logs.html</h3>
-  <p>This is the parent iframe. The iframe below is nested inside it.</p>
-  <iframe src="/analytics.html" title="Analytics Frame"></iframe>
+  <h3>🖥️ System Logs - Where Reality Gets Logged</h3>
+  <p>Welcome to our comprehensive logging system. Every click, every bug, every automation attempt is faithfully recorded here.</p>
+  
+  <div class="log-entry">
+    [INFO] Bug tracking system initialized - ready to collect new residents
+  </div>
+  
+  <div class="log-entry warning-log">
+    [WARN] Selenium automation detected - enabling enhanced chaos mode
+  </div>
+  
+  <div class="log-entry error-log">
+    [ERROR] Bug #247 has achieved sentience and refuses to be closed
+  </div>
+  
+  <p>The analytics frame below provides real-time insights into our thriving bug ecosystem:</p>
+  <iframe src="/analytics.html" title="Bug Analytics Dashboard"></iframe>
+  
+  <p><em>💡 Pro tip: Some logs may occasionally reorganize themselves. It's not a bug, it's a feature!</em></p>
 </body>
 </html> 

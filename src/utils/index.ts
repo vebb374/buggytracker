@@ -199,31 +199,9 @@ export const recreateTicketDOM = (ticketId: string): number => {
   return currentVersion + 1;
 };
 
-export const addVariableDelay = (baseDelay: number = 1000): Promise<void> => {
-  // Variable delay between 1-4 seconds for automation challenges
-  const randomDelay = baseDelay + Math.random() * 3000;
-  return new Promise(resolve => setTimeout(resolve, randomDelay));
-};
 
 
 
-// Toast notification utilities
-export const createToast = (
-  type: ToastAlert['type'],
-  message: string,
-  duration: number = 1500
-): ToastAlert => {
-  return {
-    id: generateId(),
-    type,
-    message,
-    duration,
-    position: {
-      x: Math.random() * 100, // Random positioning for automation challenges
-      y: Math.random() * 100
-    }
-  };
-};
 
 // Date formatting utilities
 export const formatDate = (date: Date | string | null): string => {

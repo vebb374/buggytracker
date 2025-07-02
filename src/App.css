@@ -16,6 +16,11 @@
   position: absolute;
   pointer-events: none;
   overflow: visible;
+  z-index: 5;
+}
+
+.bug-animation:hover .floating-bug {
+  animation-play-state: paused;
 }
 
 .left-bugs {
@@ -32,9 +37,16 @@
 
 .floating-bug {
   position: absolute;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
   animation-fill-mode: both;
+  filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+  transition: all 0.3s ease;
+}
+
+.floating-bug:hover {
+  transform: scale(1.3) !important;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
 }
 
 @keyframes floatBug1 {
@@ -80,18 +92,58 @@
 .bug-5 { animation: floatBug5 9s ease-in-out infinite; animation-delay: 1.5s; }
 .bug-6 { animation: floatBug6 6.5s ease-in-out infinite; animation-delay: 2.5s; }
 
-/* Quirky title effects */
+/* Additional quirky bug effects */
+.header-title {
+  overflow: visible !important;
+}
+
+/* Special hover effects for the whole header */
+.app-header:hover .quirky-title {
+  animation-duration: 1s, 1s;
+}
+
+.app-header:hover .floating-bug {
+  animation-duration: 2s;
+  font-size: 20px;
+}
+
+/* Quirky title effects with Kablammo font */
 .quirky-title {
-  background: linear-gradient(45deg, #fff, #e6f7ff, #fff);
-  background-size: 400% 400%;
-  animation: quirkyShinе 3s ease-in-out infinite;
+  font-family: 'Kablammo', cursive, -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background: linear-gradient(45deg, #fff, #e6f7ff, #fff, #fff5e6, #f6ffed);
+  background-size: 500% 500%;
+  animation: quirkyShinе 4s ease-in-out infinite, titleBounce 2s ease-in-out infinite;
   -webkit-background-clip: text;
   background-clip: text;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  font-variation-settings: "MORF" 50;
 }
 
 @keyframes quirkyShinе {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+@keyframes titleBounce {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    font-variation-settings: "MORF" 30;
+  }
+  25% { 
+    transform: scale(1.02) rotate(0.5deg);
+    font-variation-settings: "MORF" 70;
+  }
+  50% { 
+    transform: scale(1.04) rotate(-0.5deg);
+    font-variation-settings: "MORF" 100;
+  }
+  75% { 
+    transform: scale(1.02) rotate(0.3deg);
+    font-variation-settings: "MORF" 60;
+  }
 }
 
 /* Loading animation for IFrame panel */
