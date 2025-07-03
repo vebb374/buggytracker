@@ -1,5 +1,6 @@
 {
   "name": "buggytracker",
+  "homepage": "https://projects.hackerearth.com/p9/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
