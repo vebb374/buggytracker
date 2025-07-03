@@ -150,7 +150,7 @@ export const IFramePanel: React.FC = () => {
       {/* Real Nested IFrame */}
       <iframe
         ref={iframeRef}
-        src="/system-logs.html"
+        src="./system-logs.html"
         style={{
           border: '1px solid #d9d9d9',
           borderRadius: '8px',

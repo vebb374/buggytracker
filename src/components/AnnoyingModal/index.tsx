@@ -8,16 +8,21 @@ interface AnnoyingModalProps {
 }
 
 const messages = [
-  "🎉 Congratulations! You've unlocked the 'Broke Developer' achievement! Please insert more coins to continue.",
-  "ERROR 404: Your wallet not found. Have you tried turning your bank account off and on again?",
-  "BREAKING: Local developer discovers they can't afford coffee AND software subscriptions. More at 11.",
-  "⚠️ WARNING: Your code quality drops by 50% on the free plan. Upgrade to write bugs with style!",
-  "🚨 URGENT: Your mom called. She's disappointed you're still using the free tier.",
-  "Fun fact: Every time you use the free plan, a JavaScript developer somewhere cries a single tear.",
-  "Plot twist: The real bug was the friends we made along the way... Just kidding, it's your free plan.",
-  "Roses are red, violets are blue, your free trial expired, and so did you.",
-  "404 Error: Motivation not found. Try upgrading your subscription and your life choices.",
-  "Breaking news: Scientists discover correlation between free plans and unfinished side projects."
+  "🐌 Still using Selenium in 2024? That's cute. Your tests are slower than Internet Explorer loading Gmail! 💀",
+  "🤡 BREAKING: Local QA discovers their 'comprehensive' E2E suite breaks every time someone sneezes on the DOM! 🤧",
+  "⏰ Your Selenium test has been waiting for that element longer than you've been waiting for a promotion. Maybe try Playwright? 🎭",
+  "🚨 URGENT: Your flaky tests are giving the entire team trust issues. Even your therapist uses Playwright now! 💊",
+  "😂 Plot twist: Your E2E tests found more bugs in your test code than in the actual application! 🪲",
+  "🔥 HOT TAKE: Writing E2E tests with no page objects is like writing spaghetti code but somehow even more embarrassing! 🍝",
+  "💸 Fun fact: The time you spend debugging flaky Selenium tests could've funded a small country's internet infrastructure! 🌍",
+  "🎪 Your test environment is down again! In other news, water is wet and QA engineers are dead inside! ⚰️",
+  "🤖 ERROR 500: Your CI pipeline failed because your E2E test couldn't handle a loading spinner. Very professional! 🌀",
+  "🎯 Roses are red, violets are blue, your XPath broke again, and your CSS selectors did too! 💔",
+  "🦄 MYTH BUSTED: E2E tests that run reliably on the first try. Scientists are still searching for evidence! 🔬",
+  "☕ Your test suite takes longer to run than it takes to manually test the entire app. Big brain energy! 🧠",
+  "🚀 INNOVATION: Local dev discovers they can write tests that actually test something useful instead of clicking random buttons! 🎊",
+  "💀 Your test failed because the button moved 2 pixels to the left. Time to update 47 locators! Welcome to E2E hell! 🔥",
+  "🎭 Playwright users explaining why they're superior to Selenium users (nobody asked, but here we are again!) 🙄"
 ];
 
 const AnnoyingModal: React.FC<AnnoyingModalProps> = ({ open, onClose }) => {
@@ -32,7 +37,7 @@ const AnnoyingModal: React.FC<AnnoyingModalProps> = ({ open, onClose }) => {
 
   return (
     <Modal
-      title="Subscription Expired"
+      title="An annnoying Modal to hinder you"
       open={open}
       onCancel={onClose}
       footer={null}

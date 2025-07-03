@@ -111,7 +111,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const showModalInterval = setInterval(() => {
       setAnnoyingModalVisible(true);
-    }, 10000 + Math.random() * 5000); // Between 10 and 15 seconds
+    },5000 + Math.random() * 10000); // Between 5 and 15 seconds
 
     return () => clearInterval(showModalInterval);
   }, []);

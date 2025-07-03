@@ -195,7 +195,7 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
       footer={null}
       maskClosable={!isSaving && !isValidating}
       keyboard={!isSaving && !isValidating}
-      styles={{ body: { overflowY: 'auto', maxHeight: 'calc(100vh - 400px)' } }}
+      styles={{ body: { overflowY: 'auto', maxHeight: 'calc(100vh - 400px)', zIndex: 1000 } }}
      
     >
       <div>
