@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { ConfigProvider, Layout, Typography, Button, Badge, Space, Drawer, App as AntApp } from 'antd';
 import { BugOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 import { AppProvider } from './hooks/useAppContext';
-import { useTickets } from './hooks/customHooks';
+import { useTickets, useToasts } from './hooks/customHooks';
 import { KanbanBoard } from './components/KanbanBoard';
 import { AlertSystem } from './components/AlertSystem';
 import { IFramePanel } from './components/IFramePanel';
@@ -98,6 +98,7 @@ const useResponsive = () => {
 // Main App Component
 const AppContent: React.FC = () => {
   const { updateTicket, addTicket } = useTickets();
+  const { addToast } = useToasts();
   const { isMobile, isDesktop } = useResponsive();
   
   // Phase 5: Enhanced state management for responsive UI
@@ -111,7 +112,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const showModalInterval = setInterval(() => {
       setAnnoyingModalVisible(true);
-    },5000 + Math.random() * 10000); // Between 5 and 15 seconds
+    },5000 + Math.random() * 8000); // Between 5 and 15 seconds
 
     return () => clearInterval(showModalInterval);
   }, []);
@@ -128,6 +129,9 @@ const AppContent: React.FC = () => {
 
   const handleEditorSave = (ticket: Ticket) => {
     if (editingTicket) {
+      if (editingTicket.status !== ticket.status) {
+        addToast('success', `Moved "${ticket.title}" to ${ticket.status}`);
+      }
       updateTicket(ticket.id, ticket);
     } else {
       // Creating new ticket - add to tickets array

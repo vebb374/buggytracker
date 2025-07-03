@@ -195,7 +195,8 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
       footer={null}
       maskClosable={!isSaving && !isValidating}
       keyboard={!isSaving && !isValidating}
-      styles={{ body: { overflowY: 'auto', maxHeight: 'calc(100vh - 400px)', zIndex: 1000 } }}
+      zIndex={1000}
+      styles={{ body: { overflowY: 'auto', maxHeight: 'calc(100vh - 350px)' } }}
      
     >
       <div>
@@ -380,7 +381,7 @@ export const TicketEditor: React.FC<TicketEditorProps> = ({
                   setNewTagInput('');
                 }
               }}
-              dropdownRender={(menu: React.ReactNode) => (
+              popupRender={(menu: React.ReactNode) => (
                 <>
                   {menu}
                   <Divider style={{ margin: '8px 0' }} />

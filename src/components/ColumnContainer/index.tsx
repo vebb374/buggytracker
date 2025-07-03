@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Badge } from 'antd';
-import { Droppable, type DroppableProvided, type DroppableStateSnapshot } from '@hello-pangea/dnd';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 import { TicketCard } from '../TicketCard';
 import type {  ColumnContainerProps } from '../../types';
 
@@ -12,6 +13,7 @@ export const ColumnContainer: React.FC<ColumnContainerProps> = ({
   onEditTicket,
   onNextColumn,
 }) => {
+  const { setNodeRef, isOver } = useDroppable({ id: column.status });
   // Phase 5: Responsive design calculations
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
 
@@ -43,49 +45,45 @@ export const ColumnContainer: React.FC<ColumnContainerProps> = ({
           </Title>
           <Badge count={tickets.length} style={{ backgroundColor: columnColor }} />
       </div>
-      <Droppable droppableId={column.status}>
-        {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            style={{
-              flexGrow: 1,
-              minHeight: '100px',
-              backgroundColor: snapshot.isDraggingOver ? '#e6f7ff' : '#f4f5f7',
-              borderRadius: '6px',
-              padding: '8px',
-              transition: 'background-color 0.2s ease',
-            }}
-          >
-            {/* Phase 5: Enhanced empty state for responsive design */}
-            {tickets.length === 0 && (
-              <div style={{
-                textAlign: 'center',
-                padding: isMobileView ? '24px 12px' : '40px 20px',
-                color: '#8c8c8c',
-                fontSize: isMobileView ? '13px' : '14px',
-                fontStyle: 'italic',
-              }}>
-                {column.status === 'TODO' && 'Drop new tickets here'}
-                {column.status === 'WORKING' && 'Drag active tasks here'}
-                {column.status === 'DONE' && 'Completed tickets go here'}
-              </div>
-            )}
-            
-            {/* Phase 5: Enhanced ticket rendering with responsive spacing */}
-            {tickets.map((ticket, index) => (
-              <TicketCard
-                key={ticket.id}
-                ticket={ticket}
-                index={index}
-                onEdit={onEditTicket}
-                onNextColumn={onNextColumn}
-              />
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+      <SortableContext id={column.status} items={tickets.map(t => t.id)}>
+        <div
+          ref={setNodeRef}
+          data-testid={`drop-zone-${column.status}`}
+          style={{
+            flexGrow: 1,
+            minHeight: '100px',
+            backgroundColor: isOver ? '#e6f7ff' : '#f4f5f7',
+            borderRadius: '6px',
+            padding: '8px',
+            transition: 'background-color 0.2s ease',
+          }}
+        >
+          {/* Phase 5: Enhanced empty state for responsive design */}
+          {tickets.length === 0 && (
+            <div style={{
+              textAlign: 'center',
+              padding: isMobileView ? '24px 12px' : '40px 20px',
+              color: '#8c8c8c',
+              fontSize: isMobileView ? '13px' : '14px',
+              fontStyle: 'italic',
+            }}>
+              {column.status === 'TODO' && 'Drop new tickets here'}
+              {column.status === 'WORKING' && 'Drag active tasks here'}
+              {column.status === 'DONE' && 'Completed tickets go here'}
+            </div>
+          )}
+          
+          {/* Phase 5: Enhanced ticket rendering with responsive spacing */}
+          {tickets.map((ticket) => (
+            <TicketCard
+              key={ticket.id}
+              ticket={ticket}
+              onEdit={onEditTicket}
+              onNextColumn={onNextColumn}
+            />
+          ))}
+        </div>
+      </SortableContext>
     </div>
   );
 }; 

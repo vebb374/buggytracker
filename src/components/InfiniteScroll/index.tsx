@@ -60,8 +60,6 @@ export const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
         <TicketCard
           key={ticket.id}
           ticket={ticket}
-          index={index}
-          isDragging={false}
           onEdit={onEditTicket}
         />
       ))}

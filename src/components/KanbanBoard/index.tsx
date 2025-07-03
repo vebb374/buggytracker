@@ -1,7 +1,13 @@
 import React from 'react';
 import { Spin } from 'antd';
-import { DragDropContext } from '@hello-pangea/dnd';
-import type { DropResult } from '@hello-pangea/dnd';
+import {
+  DndContext,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent
+} from '@dnd-kit/core';
 import { ColumnContainer } from '../ColumnContainer';
 import { useAppContext } from '../../hooks/useAppContext';
 import { useTickets, useToasts } from '../../hooks/customHooks';
@@ -16,6 +22,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onEditTicket }) => {
   const { moveTicket } = useTickets();
   const { addToast } = useToasts();
   const { tickets, columns, loadingStates } = state;
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor));
 
   const handleNextColumn = (ticket: Ticket) => {
     const currentStatus = ticket.status;
@@ -37,19 +44,35 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onEditTicket }) => {
     }
   };
 
-  const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-    if (!destination) return;
+    if (!over) return;
 
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
+    const activeId = active.id as string;
+    const overId = over.id as string;
+
+    if (activeId === overId) return;
+    
+    const activeTicket = tickets.find(t => t.id === activeId);
+    if (!activeTicket) return;
+
+    // Find the target column's status
+    let newStatus: 'TODO' | 'WORKING' | 'DONE' | null = null;
+    const overIsColumn = columns.some(c => c.status === overId);
+
+    if (overIsColumn) {
+      newStatus = overId as 'TODO' | 'WORKING' | 'DONE';
+    } else {
+      const overTicket = tickets.find(t => t.id === overId);
+      if (overTicket) {
+        newStatus = overTicket.status;
+      }
     }
     
-    const newStatus = destination.droppableId as 'TODO' | 'WORKING' | 'DONE';
+    if (!newStatus || activeTicket.status === newStatus) {
+      return;
+    }
     
     if (newStatus === 'WORKING') {
         const workingTickets = tickets.filter(t => t.status === 'WORKING');
@@ -59,12 +82,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onEditTicket }) => {
         }
     }
     
-    moveTicket(draggableId, newStatus);
-    
-    const ticket = tickets.find(t => t.id === draggableId);
-    if(ticket) {
-      addToast('success', `Moved "${ticket.title}" to ${newStatus}`);
-    }
+    moveTicket(activeId, newStatus);
+    addToast('success', `Moved "${activeTicket.title}" to ${newStatus}`);
   };
 
   if (loadingStates.ticketsLoading) {
@@ -76,7 +95,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onEditTicket }) => {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DndContext sensors={sensors} onDragEnd={onDragEnd}>
       <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', padding: '16px' }}>
         {columns.map((column) => {
           const columnTickets = tickets.filter(ticket => ticket.status === column.status);
@@ -91,6 +110,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ onEditTicket }) => {
           );
         })}
       </div>
-    </DragDropContext>
+    </DndContext>
   );
 }; 
