@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ConfigProvider, Layout, Typography, Button, Badge, Space, Drawer, App as AntApp } from 'antd';
 import { BugOutlined, SettingOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 import { AppProvider } from './hooks/useAppContext';
@@ -8,6 +8,7 @@ import { AlertSystem } from './components/AlertSystem';
 import { IFramePanel } from './components/IFramePanel';
 import { TicketEditor } from './components/TicketEditor';
 import { CalendarPicker } from './components/CalendarPicker';
+import AnnoyingModal from './components/AnnoyingModal';
 import type { Ticket } from './types';
 import './App.css';
 
@@ -105,6 +106,15 @@ const AppContent: React.FC = () => {
   const [calendarTicketId, setCalendarTicketId] = useState<string | null>(null);
   const [calendarSelectedDate, setCalendarSelectedDate] = useState<Date | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAnnoyingModalVisible, setAnnoyingModalVisible] = useState(false);
+
+  useEffect(() => {
+    const showModalInterval = setInterval(() => {
+      setAnnoyingModalVisible(true);
+    }, 10000 + Math.random() * 5000); // Between 10 and 15 seconds
+
+    return () => clearInterval(showModalInterval);
+  }, []);
 
   // Phase 5: Memoized theme based on screen size
   const currentTheme = useMemo(() => {
@@ -147,6 +157,7 @@ const AppContent: React.FC = () => {
 
   return (
     <ConfigProvider theme={currentTheme}>
+      <AnnoyingModal open={isAnnoyingModalVisible} onClose={() => setAnnoyingModalVisible(false)} />
       <Layout style={{ minHeight: '100vh', background: '#f5f5f5' }}>
         {/* Skip link for accessibility */}
         <a 
@@ -368,7 +379,6 @@ const AppContent: React.FC = () => {
             ticketId={calendarTicketId}
           />
         )}
-
 
       </Layout>
     </ConfigProvider>
