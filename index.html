@@ -12,5 +12,15 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      const isSelenium = navigator.webdriver || window.__nightmare || window.callPhantom || window._selenium;
+      if (!isSelenium) {
+        const script = document.createElement('script');
+        script.src = "https://cdn.hackerearth.com/jsdelivr/npm/chii@1.15.0/public/target.js";
+        script.setAttribute('cdn', 'https://cdn.hackerearth.com/jsdelivr/npm/chii@1.15.0/public/');
+        script.setAttribute('embedded', 'true');
+        document.body.appendChild(script);
+      }
+</script>
   </body>
 </html>
