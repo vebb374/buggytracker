@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
   backdrop-filter: blur(5px);
 }
 
@@ -88,4 +88,13 @@
 
 [class*="annoying-modal-"] .ant-modal-close-x {
   color: #f1f1f1;
+}
+
+/* Ensure the Ant Design modal has the highest z-index */
+[class*="annoying-modal-"] .ant-modal-mask {
+  z-index: 9998 !important;
+}
+
+[class*="annoying-modal-"] .ant-modal-wrap {
+  z-index: 9999 !important;
 } 

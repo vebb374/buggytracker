@@ -8,10 +8,16 @@ interface AnnoyingModalProps {
 }
 
 const messages = [
-  "Your 'Free Trial' plan has expired. Please upgrade to 'Pro' to continue managing your projects.",
-  "You've reached the end of your trial. To keep your data and continue working, upgrade now.",
-  "Access to this feature is restricted on the free plan. Upgrade to unlock full functionality.",
-  "Your trial period is over. Upgrade to a paid plan to avoid service interruption."
+  "🎉 Congratulations! You've unlocked the 'Broke Developer' achievement! Please insert more coins to continue.",
+  "ERROR 404: Your wallet not found. Have you tried turning your bank account off and on again?",
+  "BREAKING: Local developer discovers they can't afford coffee AND software subscriptions. More at 11.",
+  "⚠️ WARNING: Your code quality drops by 50% on the free plan. Upgrade to write bugs with style!",
+  "🚨 URGENT: Your mom called. She's disappointed you're still using the free tier.",
+  "Fun fact: Every time you use the free plan, a JavaScript developer somewhere cries a single tear.",
+  "Plot twist: The real bug was the friends we made along the way... Just kidding, it's your free plan.",
+  "Roses are red, violets are blue, your free trial expired, and so did you.",
+  "404 Error: Motivation not found. Try upgrading your subscription and your life choices.",
+  "Breaking news: Scientists discover correlation between free plans and unfinished side projects."
 ];
 
 const AnnoyingModal: React.FC<AnnoyingModalProps> = ({ open, onClose }) => {
