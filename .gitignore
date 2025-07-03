@@ -26,6 +26,7 @@ lerna-debug.log*
 # IDE and editor files
 .idea/
 .vscode/
+.cursor/
 !.vscode/extensions.json
 .cursor-db.json
 .DS_Store

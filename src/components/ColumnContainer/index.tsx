@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Badge } from 'antd';
 import { Droppable } from '@hello-pangea/dnd';
 import { TicketCard } from '../TicketCard';
-import type { Ticket, ColumnContainerProps } from '../../types';
+import type {  ColumnContainerProps } from '../../types';
 
 const { Title } = Typography;
 
@@ -14,7 +14,6 @@ export const ColumnContainer: React.FC<ColumnContainerProps> = ({
 }) => {
   // Phase 5: Responsive design calculations
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
-  const ticketCount = tickets.length;
 
   // Phase 5: Get column color based on status
   const getColumnColor = (status: string) => {

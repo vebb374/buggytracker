@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Spin, Button, Alert } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { TicketCard } from '../TicketCard';
-import { useTickets } from '../../hooks/useAppContext';
+import { useTickets } from '../../hooks/customHooks';
 import type { Ticket } from '../../types';
 import { shouldSimulateNetworkFailure, getRandomLoadingMessage } from '../../utils';
 

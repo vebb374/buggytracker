@@ -1,7 +1,7 @@
 import { useAppContext } from './useAppContext';
 import type { Ticket } from '../types';
 import { 
-  recreateTicketDOM,
+  
   advancedDevToolsDetection,
   enhancedDOMRecreation,
   complexTimingChallenges,
@@ -47,11 +47,7 @@ export const useTickets = () => {
     dispatch({ type: 'SET_LOADING', payload: { key: 'ticketsLoading', value: false } });
   };
 
-  const recreateTicketDom = (ticketId: string) => {
-    // This function is no longer needed for complex DOM manipulation,
-    // but we can keep it for simple version updates if required elsewhere.
-    // For now, it does nothing to prevent drag issues.
-  };
+
 
   return {
     tickets: state.tickets,
@@ -63,7 +59,7 @@ export const useTickets = () => {
     moveTicket,
     deleteTicket,
     loadMoreTickets,
-    recreateTicketDom
+    
   };
 };
 
